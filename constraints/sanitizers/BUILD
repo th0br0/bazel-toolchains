@@ -14,13 +14,14 @@
 
 licenses(["notice"])  # Apache 2.0
 
-package(default_visibility = ["//visibility:public"])
+package(default_visibility=["//visibility:public"])
 
 # Constraints used to configure sanitizers.
 
-constraint_setting(name = "msan")
+constraint_setting(name="msan")
 
-constraint_value(
-    name = "support_msan",
-    constraint_setting = ":msan",
-)
+constraint_setting(name="tsan")
+
+constraint_value(name="support_msan", constraint_setting=":msan", )
+
+constraint_value(name="support_tsan", constraint_setting=":tsan", )

@@ -26,11 +26,41 @@ load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
 
 pkg_tar(
     name = "debian8_tar",
+    package_dir = "/opt/llvm/libcxx",
+    strip_prefix = "",
+    tags = ["manual"],
+    deps = [
+        "@debian8_libcxx_release//file",
+    ],
+)
+
+pkg_tar(
+    name = "debian8_msan_tar",
+    package_dir = "/opt/llvm/libcxx-msan",
+    strip_prefix = "",
+    tags = ["manual"],
+    deps = [
+        "@debian8_libcxx_msan_release//file",
+    ],
+)
+
+pkg_tar(
+    name = "debian8_tsan_tar",
+    package_dir = "/opt/llvm/libcxx-tsan",
+    strip_prefix = "",
+    tags = ["manual"],
+    deps = [
+        "@debian8_libcxx_tsan_release//file",
+    ],
+)
+
+pkg_tar(
+    name = "debian9_tar",
     package_dir = "/usr/local/",
     strip_prefix = ".",
     tags = ["manual"],
     deps = [
-        "@debian8_libcxx_release//file",
+        "@debian9_libcxx_release//file",
     ],
 )
 

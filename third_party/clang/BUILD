@@ -27,7 +27,7 @@ load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
 pkg_tar(
     name = "debian8_tar",
     package_dir = "/usr/local/",
-    strip_prefix = ".",
+    strip_prefix = "",
     tags = ["manual"],
     deps = [
         "@debian8_clang_release//file",

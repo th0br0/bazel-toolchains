@@ -32,5 +32,7 @@ language_tool_layer(
     tars = [
         "//third_party/clang:debian8_tar",
         "//third_party/libcxx:debian8_tar",
+        "//third_party/libcxx:debian8_tsan_tar",
+        "//third_party/libcxx:debian8_msan_tar",
     ],
 )

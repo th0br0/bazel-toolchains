@@ -15,34 +15,24 @@
 # Once recursive workspace is implemented in Bazel, this file should cease
 # to exist.
 
-load(
-    "@bazel_tools//tools/build_defs/repo:http.bzl",
-    "http_archive",
-    "http_file",
-)
-load(
-    "//third_party/golang:revision.bzl",
-    "GOLANG_REVISION",
-    "GOLANG_SHA256",
-)
-load(
-    "//third_party/clang:revision.bzl",
-    "CLANG_REVISION",
-    "DEBIAN8_CLANG_SHA256",
-    "UBUNTU16_04_CLANG_SHA256",
-)
-load(
-    "//third_party/libcxx:revision.bzl",
-    "DEBIAN8_LIBCXX_SHA256",
-    "LIBCXX_REVISION",
-    "UBUNTU16_04_LIBCXX_SHA256",
-)
-load(
-    "//third_party/openjdk:revision.bzl",
-    "JDK_VERSION",
-    "OPENJDK_SHA256",
-    "OPENJDK_SRC_SHA256",
-)
+load("@bazel_tools//tools/build_defs/repo:http.bzl",
+     "http_archive",
+     "http_file", )
+load("//third_party/golang:revision.bzl", "GOLANG_REVISION", "GOLANG_SHA256")
+load("//third_party/clang:revision.bzl",
+     "CLANG_REVISION",
+     "DEBIAN8_CLANG_SHA256",
+     "UBUNTU16_04_CLANG_SHA256", )
+load("//third_party/libcxx:revision.bzl",
+     "DEBIAN8_LIBCXX_MSAN_SHA256",
+     "DEBIAN8_LIBCXX_SHA256",
+     "DEBIAN8_LIBCXX_TSAN_SHA256",
+     "LIBCXX_REVISION",
+     "UBUNTU16_04_LIBCXX_SHA256", )
+load("//third_party/openjdk:revision.bzl",
+     "JDK_VERSION",
+     "OPENJDK_SHA256",
+     "OPENJDK_SRC_SHA256", )
 load(
     "//container/common/bazel:version.bzl",
     "BAZEL_VERSION_SHA256S",
@@ -67,16 +57,17 @@ def repositories():
             # executable to be in the PATH
             "@io_bazel_rules_docker//toolchains/docker:default_linux_toolchain",
             "@io_bazel_rules_docker//toolchains/docker:default_windows_toolchain",
-            "@io_bazel_rules_docker//toolchains/docker:default_osx_toolchain",
-        )
+            "@io_bazel_rules_docker//toolchains/docker:default_osx_toolchain", )
 
     # io_bazel_rules_go is the dependency of container_test rules.
     if "io_bazel_rules_go" not in excludes:
         http_archive(
-            name = "io_bazel_rules_go",
-            urls = ["https://github.com/bazelbuild/rules_go/releases/download/0.16.0/rules_go-0.16.0.tar.gz"],
-            sha256 = "ee5fe78fe417c685ecb77a0a725dc9f6040ae5beb44a0ba4ddb55453aad23a8a",
-        )
+            name="io_bazel_rules_go",
+            sha256=
+            "ee5fe78fe417c685ecb77a0a725dc9f6040ae5beb44a0ba4ddb55453aad23a8a",
+            urls=[
+                "https://github.com/bazelbuild/rules_go/releases/download/0.16.0/rules_go-0.16.0.tar.gz",
+            ], )
 
     if "base_images_docker" not in excludes:
         http_archive(
@@ -99,86 +90,110 @@ def repositories():
     # Bazel gpg key necessary to install Bazel in the containers.
     if "bazel_gpg" not in excludes:
         http_file(
-            name = "bazel_gpg",
-            sha256 = "30af2ca7abfb65987cd61802ca6e352aadc6129dfb5bfc9c81f16617bc3a4416",
-            urls = ["https://bazel.build/bazel-release.pub.gpg"],
-        )
+            name="bazel_gpg",
+            sha256=
+            "30af2ca7abfb65987cd61802ca6e352aadc6129dfb5bfc9c81f16617bc3a4416",
+            urls=["https://bazel.build/bazel-release.pub.gpg"], )
 
     # Docker gpg key necessary to install Docker in the containers.
     if "debian_docker_gpg" not in excludes:
         http_file(
-            name = "debian_docker_gpg",
-            sha256 = "1500c1f56fa9e26b9b8f42452a553675796ade0807cdce11975eb98170b3a570",
-            urls = ["https://download.docker.com/linux/debian/gpg"],
-        )
+            name="debian_docker_gpg",
+            sha256=
+            "1500c1f56fa9e26b9b8f42452a553675796ade0807cdce11975eb98170b3a570",
+            urls=["https://download.docker.com/linux/debian/gpg"], )
 
     # Docker gpg key necessary to install Docker in the containers.
     if "xenial_docker_gpg" not in excludes:
         http_file(
-            name = "xenial_docker_gpg",
-            sha256 = "1500c1f56fa9e26b9b8f42452a553675796ade0807cdce11975eb98170b3a570",
-            urls = ["https://download.docker.com/linux/ubuntu/gpg"],
-        )
+            name="xenial_docker_gpg",
+            sha256=
+            "1500c1f56fa9e26b9b8f42452a553675796ade0807cdce11975eb98170b3a570",
+            urls=["https://download.docker.com/linux/ubuntu/gpg"], )
 
     # GCloud gpg key necessary to install GCloud in the containers.
     if "gcloud_gpg" not in excludes:
         http_file(
-            name = "gcloud_gpg",
-            sha256 = "226ba1072f20e4ff97ee4f94e87bf45538a900a6d9b25399a7ac3dc5a2f3af87",
-            urls = ["https://packages.cloud.google.com/apt/doc/apt-key.gpg"],
-        )
+            name="gcloud_gpg",
+            sha256=
+            "226ba1072f20e4ff97ee4f94e87bf45538a900a6d9b25399a7ac3dc5a2f3af87",
+            urls=["https://packages.cloud.google.com/apt/doc/apt-key.gpg"], )
 
     # Launchpad OpenJDK key used when install java in trusty.
     if "launchpad_openjdk_gpg" not in excludes:
         http_file(
-            name = "launchpad_openjdk_gpg",
-            sha256 = "54b6274820df34a936ccc6f5cb725a9b7bb46075db7faf0ef7e2d86452fa09fd",
-            urls = ["http://keyserver.ubuntu.com/pks/lookup?op=get&fingerprint=on&search=0xEB9B1D8886F44E2A"],
-        )
+            name="launchpad_openjdk_gpg",
+            sha256=
+            "54b6274820df34a936ccc6f5cb725a9b7bb46075db7faf0ef7e2d86452fa09fd",
+            urls=[
+                "http://keyserver.ubuntu.com/pks/lookup?op=get&fingerprint=on&search=0xEB9B1D8886F44E2A",
+            ], )
 
     # =============================== Toolchains ===============================
     # Golang
     if "golang_release" not in excludes:
-        http_file(
-            name = "golang_release",
-            downloaded_file_path = "go" + GOLANG_REVISION + ".linux-amd64.tar.gz",
-            sha256 = GOLANG_SHA256,
-            urls = ["https://storage.googleapis.com/golang/go" + GOLANG_REVISION + ".linux-amd64.tar.gz"],
-        )
+        http_file(name="golang_release",
+                  downloaded_file_path="go" + GOLANG_REVISION +
+                  ".linux-amd64.tar.gz",
+                  sha256=GOLANG_SHA256,
+                  urls=["https://storage.googleapis.com/golang/go" +
+                        GOLANG_REVISION + ".linux-amd64.tar.gz"], )
 
     # Clang
     if "debian8_clang_release" not in excludes:
         http_file(
-            name = "debian8_clang_release",
-            downloaded_file_path = "clang_" + CLANG_REVISION + ".tar.gz",
-            sha256 = DEBIAN8_CLANG_SHA256,
-            urls = ["https://storage.googleapis.com/clang-builds-stable/clang-debian8/clang_" + CLANG_REVISION + ".tar.gz"],
-        )
+            name="debian8_clang_release",
+            downloaded_file_path="clang_" + CLANG_REVISION + ".tar.gz",
+            sha256=DEBIAN8_CLANG_SHA256,
+            urls=
+            ["https://storage.googleapis.com/clang-builds-stable/clang-debian8/clang_"
+             + CLANG_REVISION + ".tar.gz"], )
 
     if "ubuntu16_04_clang_release" not in excludes:
         http_file(
-            name = "ubuntu16_04_clang_release",
-            downloaded_file_path = "clang_" + CLANG_REVISION + ".tar.gz",
-            sha256 = UBUNTU16_04_CLANG_SHA256,
-            urls = ["https://storage.googleapis.com/clang-builds-stable/clang-ubuntu16_04/clang_" + CLANG_REVISION + ".tar.gz"],
-        )
+            name="ubuntu16_04_clang_release",
+            downloaded_file_path="clang_" + CLANG_REVISION + ".tar.gz",
+            sha256=UBUNTU16_04_CLANG_SHA256,
+            urls=
+            ["https://storage.googleapis.com/clang-builds-stable/clang-ubuntu16_04/clang_"
+             + CLANG_REVISION + ".tar.gz"], )
 
     # libcxx
     if "debian8_libcxx_release" not in excludes:
         http_file(
-            name = "debian8_libcxx_release",
-            downloaded_file_path = "libcxx-msan_" + LIBCXX_REVISION + ".tar.gz",
-            sha256 = DEBIAN8_LIBCXX_SHA256,
-            urls = ["https://storage.googleapis.com/clang-builds-stable/clang-debian8/libcxx-msan_" + LIBCXX_REVISION + ".tar.gz"],
-        )
+            name="debian8_libcxx_release",
+            downloaded_file_path="libcxx_" + LIBCXX_REVISION + ".tar.gz",
+            sha256=DEBIAN8_LIBCXX_SHA256,
+            urls=
+            ["https://storage.googleapis.com/clang-builds-stable/clang-debian8/libcxx_"
+             + LIBCXX_REVISION + ".tar.gz"], )
+
+    if "debian8_libcxx_msan_release" not in excludes:
+        http_file(
+            name="debian8_libcxx_msan_release",
+            downloaded_file_path="libcxx-msan_" + LIBCXX_REVISION + ".tar.gz",
+            sha256=DEBIAN8_LIBCXX_MSAN_SHA256,
+            urls=
+            ["https://storage.googleapis.com/clang-builds-stable/clang-debian8/libcxx-msan_"
+             + LIBCXX_REVISION + ".tar.gz"], )
+
+    if "debian8_libcxx_tsan_release" not in excludes:
+        http_file(
+            name="debian8_libcxx_tsan_release",
+            downloaded_file_path="libcxx-tsan_" + LIBCXX_REVISION + ".tar.gz",
+            sha256=DEBIAN8_LIBCXX_TSAN_SHA256,
+            urls=
+            ["https://storage.googleapis.com/clang-builds-stable/clang-debian8/libcxx-tsan_"
+             + LIBCXX_REVISION + ".tar.gz"], )
 
     if "ubuntu16_04_libcxx_release" not in excludes:
         http_file(
-            name = "ubuntu16_04_libcxx_release",
-            downloaded_file_path = "libcxx-msan_" + LIBCXX_REVISION + ".tar.gz",
-            sha256 = UBUNTU16_04_LIBCXX_SHA256,
-            urls = ["https://storage.googleapis.com/clang-builds-stable/clang-ubuntu16_04/libcxx-msan_" + LIBCXX_REVISION + ".tar.gz"],
-        )
+            name="ubuntu16_04_libcxx_release",
+            downloaded_file_path="libcxx-msan_" + LIBCXX_REVISION + ".tar.gz",
+            sha256=UBUNTU16_04_LIBCXX_SHA256,
+            urls=
+            ["https://storage.googleapis.com/clang-builds-stable/clang-ubuntu16_04/libcxx-msan_"
+             + LIBCXX_REVISION + ".tar.gz"], )
 
     # ============================ Bazel installers ============================
     # Official Bazel installer.sh for all supported versions.
@@ -186,28 +201,32 @@ def repositories():
         name = "bazel_%s_installer" % (bazel_version.replace(".", ""))
         if name not in excludes:
             http_file(
-                name = name,
-                downloaded_file_path = "bazel-" + bazel_version + "-installer-linux-x86_64.sh",
-                sha256 = bazel_sha256,
-                urls = [
-                    "https://releases.bazel.build/" + bazel_version + "/release/bazel-" + bazel_version + "-installer-linux-x86_64.sh",
-                    "https://github.com/bazelbuild/bazel/releases/download/" + bazel_version + "/bazel-" + bazel_version + "-installer-linux-x86_64.sh",
-                ],
-            )
+                name=name,
+                downloaded_file_path="bazel-" + bazel_version +
+                "-installer-linux-x86_64.sh",
+                sha256=bazel_sha256,
+                urls=[
+                    "https://releases.bazel.build/" + bazel_version +
+                    "/release/bazel-" + bazel_version +
+                    "-installer-linux-x86_64.sh",
+                    "https://github.com/bazelbuild/bazel/releases/download/" +
+                    bazel_version + "/bazel-" + bazel_version +
+                    "-installer-linux-x86_64.sh",
+                ], )
 
     # ============================ Azul OpenJDK packages ============================
     if "azul_open_jdk" not in excludes:
         http_file(
-            name = "azul_open_jdk",
-            downloaded_file_path = "zulu" + JDK_VERSION + "-linux_x64-allmodules.tar.gz",
-            sha256 = OPENJDK_SHA256,
-            urls = ["https://mirror.bazel.build/openjdk/azul-zulu" + JDK_VERSION + "/zulu" + JDK_VERSION + "-linux_x64-allmodules.tar.gz"],
-        )
+            name="azul_open_jdk",
+            downloaded_file_path="zulu" + JDK_VERSION +
+            "-linux_x64-allmodules.tar.gz",
+            sha256=OPENJDK_SHA256,
+            urls=["https://mirror.bazel.build/openjdk/azul-zulu" + JDK_VERSION
+                  + "/zulu" + JDK_VERSION + "-linux_x64-allmodules.tar.gz"], )
 
     if "azul_open_jdk_src" not in excludes:
-        http_file(
-            name = "azul_open_jdk_src",
-            downloaded_file_path = "zsrc" + JDK_VERSION + ".zip",
-            sha256 = OPENJDK_SRC_SHA256,
-            urls = ["https://mirror.bazel.build/openjdk/azul-zulu" + JDK_VERSION + "/zsrc" + JDK_VERSION + ".zip"],
-        )
+        http_file(name="azul_open_jdk_src",
+                  downloaded_file_path="zsrc" + JDK_VERSION + ".zip",
+                  sha256=OPENJDK_SRC_SHA256,
+                  urls=["https://mirror.bazel.build/openjdk/azul-zulu" +
+                        JDK_VERSION + "/zsrc" + JDK_VERSION + ".zip"], )

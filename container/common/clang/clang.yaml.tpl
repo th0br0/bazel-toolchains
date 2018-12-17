@@ -11,10 +11,10 @@ fileExistenceTests:
   path: '/usr/local/bin/clang'
   shouldExist: true
 - name: 'libcxx-header'
-  path: '/usr/local/include/c++/v1'
+  path: '/opt/llvm/libcxx/include/c++/v1'
   shouldExist: true
 - name: 'libcxx-lib'
-  path: '/usr/local/lib/libc++.a'
+  path: '/opt/llvm/libcxx/lib/libc++.a'
   shouldExist: true
 - name: 'llvm-symbolizer'
   path: '/usr/local/bin/llvm-symbolizer'
