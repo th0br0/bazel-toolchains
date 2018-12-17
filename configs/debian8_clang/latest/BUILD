@@ -28,6 +28,7 @@ LATEST_BAZEL_VERSION = "0.20.0"
 CONFIG_TYPES = [
     "default",
     "msan",
+    "tsan",
 ]
 
 # DO NOT depend on the following latest alias in your production jobs.
