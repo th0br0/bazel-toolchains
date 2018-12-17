@@ -91,6 +91,8 @@ toolchain {
   unfiltered_cxx_flag: "-D__DATE__=\"redacted\""
   unfiltered_cxx_flag: "-D__TIMESTAMP__=\"redacted\""
   unfiltered_cxx_flag: "-D__TIME__=\"redacted\""
+  unfiltered_cxx_flag: "-nostdinc++"
+  unfiltered_cxx_flag: "-isystem/opt/llvm/libcxx-tsan/include/c++/v1"
   compiler_flag: "-U_FORTIFY_SOURCE"
   compiler_flag: "-fstack-protector"
   compiler_flag: "-Wall"
@@ -98,7 +100,6 @@ toolchain {
   compiler_flag: "-Wself-assign"
   compiler_flag: "-fcolor-diagnostics"
   compiler_flag: "-fno-omit-frame-pointer"
-  compiler_flag: "-isystem/opt/llvm/libcxx-tsan/include/c++/v1"
   tool_path {name: "ar" path: "/usr/bin/ar" }
   tool_path {name: "ld" path: "/usr/bin/ld" }
   tool_path {name: "cpp" path: "/usr/bin/cpp" }
